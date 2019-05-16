@@ -1,3 +1,13 @@
 <resources>
     <string name="app_name">GeoQuiz</string>
+    <string name="quiz_text">Canberra is the Capital of Australia.</string>
+    <string name="true_button">True</string>
+    <string name="false_button">False</string>
+    <string name="correct_answer">Correct!!</string>
+    <string name="incorrect_toast">Incorrect!!!</string>
+    <string name="next_button">Next</string>
+    <string name="capital_Australia">Canberra is the Capital of Australia</string>
+    <string name="capital_VietNam">Ha noi is the capital of VietNam.</string>
+    <string name="capital_Laos">Jakarta is the capital of Laos</string>
+    <string name="previous_button">Prev</string>
 </resources>
