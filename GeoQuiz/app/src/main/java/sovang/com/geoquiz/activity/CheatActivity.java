@@ -12,23 +12,34 @@ import sovang.com.geoquiz.R;
 
 public class CheatActivity extends AppCompatActivity implements View.OnClickListener {
     private static final String wasAnswerShownKey = "wasAnswerShown";
+    private static final String answerIsTrueKey = "answerIsTrue";
     private Boolean answerIsTrue;
     private TextView answerTextView;
-    private Button showAnserButton;
+    private Button showAnswerButton;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cheat);
         getIntentAndUpdateView();
         setOnClickListener();
+        if (savedInstanceState != null) {
+            answerIsTrue = savedInstanceState.getBoolean(answerIsTrueKey);
+            showAnswerTextView(answerIsTrue);
+        }
     }
 
     private void setOnClickListener() {
         answerTextView = findViewById(R.id.answerText);
-        showAnserButton =findViewById(R.id.showAnswerButton);
-        if (showAnserButton != null) {
-            showAnserButton.setOnClickListener(this);
+        showAnswerButton =findViewById(R.id.showAnswerButton);
+        if (showAnswerButton != null) {
+            showAnswerButton.setOnClickListener(this);
         }
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putBoolean(answerIsTrueKey, answerIsTrue);
     }
 
     private void getIntentAndUpdateView() {
@@ -50,17 +61,25 @@ public class CheatActivity extends AppCompatActivity implements View.OnClickList
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.showAnswerButton: {
-                if (answerIsTrue) {
-                    if (answerTextView != null) {
-                        answerTextView.setText(R.string.true_button);
-                    }
-                } else {
-                    if (answerTextView != null) {
-                        answerTextView.setText(R.string.false_button);
-                    }
-                }
-                setAnswerShownResult(true);
+                showAnswerButton();
                 break;
+            }
+        }
+    }
+
+    private void showAnswerButton() {
+        showAnswerTextView(answerIsTrue);
+        setAnswerShownResult(true);
+    }
+
+    private void showAnswerTextView(boolean answerIsTrue) {
+        if (answerIsTrue) {
+            if (answerTextView != null) {
+                answerTextView.setText(R.string.true_button);
+            }
+        } else {
+            if (answerTextView != null) {
+                answerTextView.setText(R.string.false_button);
             }
         }
     }

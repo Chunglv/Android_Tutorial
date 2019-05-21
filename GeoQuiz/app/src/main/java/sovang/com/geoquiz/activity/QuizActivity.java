@@ -17,7 +17,7 @@ public class QuizActivity extends AppCompatActivity implements View.OnClickListe
     private static final String tag  = "GeoQuiz";
     private static final String indexKey = "index";
     public static final String answerIsTrueKey = "answerIsTrue";
-    public static final String isCheaterKey = "isCheaterKey";
+    public static final String questionsCheaterKey = "questionsCheaterKey";
     private static final int requestCodeCheat = 0;
     private Button trueButton = null;
     private Button falseButton = null;
@@ -33,6 +33,8 @@ public class QuizActivity extends AppCompatActivity implements View.OnClickListe
             new Question(R.string.capital_Laos, false),
     };
 
+    private boolean[] questionsCheat = new boolean[questions.length];
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +42,8 @@ public class QuizActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_quiz);
         if (savedInstanceState != null) {
             currentQuestion = savedInstanceState.getInt(indexKey);
+            questionsCheat = savedInstanceState.getBooleanArray(questionsCheaterKey);
+            isCheater = questionsCheat[currentQuestion];
         }
         setOnClickListener();
         Log.d(tag, "onCreate(Bundle savedInstanceState) called");
@@ -81,6 +85,7 @@ public class QuizActivity extends AppCompatActivity implements View.OnClickListe
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putInt(indexKey, currentQuestion);
+        outState.putBooleanArray(questionsCheaterKey, questionsCheat);
     }
 
     private void setOnClickListener() {
@@ -124,6 +129,7 @@ public class QuizActivity extends AppCompatActivity implements View.OnClickListe
                     return;
                 }
                 isCheater = CheatActivity.wasAnswerShown(data);
+                questionsCheat[currentQuestion] = isCheater;
                 break;
             }
         }
@@ -142,18 +148,21 @@ public class QuizActivity extends AppCompatActivity implements View.OnClickListe
             }
             case R.id.nextButton: {
                 currentQuestion = (currentQuestion + 1)% questions.length;
+                isCheater = isQuestionCheater(currentQuestion);
                 updateQuestion();
                 break;
             }
             case R.id.questionText: {
                 currentQuestion = (currentQuestion + 1)% questions.length;
-                isCheater = false;
+                isCheater = isQuestionCheater(currentQuestion);
                 updateQuestion();
                 break;
             }
             case R.id.previousButton: {
                 currentQuestion = ((currentQuestion - 1) % questions.length) & questions.length -1;
+                isCheater = isQuestionCheater(currentQuestion);
                 updateQuestion();
+                break;
             }
             case R.id.cheatButton: {
                 boolean answerIsTrue = questions[currentQuestion].isAnswerTrue();
@@ -161,6 +170,10 @@ public class QuizActivity extends AppCompatActivity implements View.OnClickListe
                 startActivityForResult(intent, requestCodeCheat);
             }
         }
+    }
+
+    private boolean isQuestionCheater(int index) {
+        return questionsCheat[index];
     }
 
     private void checkAnswer(boolean isPressTrue) {
