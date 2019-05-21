@@ -10,4 +10,8 @@
     <string name="capital_VietNam">Ha noi is the capital of VietNam.</string>
     <string name="capital_Laos">Jakarta is the capital of Laos</string>
     <string name="previous_button">Prev</string>
+    <string name="warningText">Are you sure you want to do this ?</string>
+    <string name="showAnswerButton">Show Answer</string>
+    <string name="cheatButton">Cheat !</string>
+    <string name="judgeToast">Cheat is wrong!</string>
 </resources>
