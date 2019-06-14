@@ -35,7 +35,9 @@ class CrimeLab private constructor(context: Context) {
         for (i in 0..99) {
             val crime = Crime()
             crime.title = "Crime #$i"
-            crime.solved = i%2==0
+            val correct = i%2 == 0
+            crime.solved = correct
+            crime.requiresPolice = correct
             crimeList.add(crime)
         }
     }
@@ -45,7 +47,7 @@ class CrimeLab private constructor(context: Context) {
 
     fun getCrime(uuid: UUID): Crime? {
         for (crime: Crime in crimeList) {
-            if (crime.id.equals(uuid)) {
+            if (crime.id == uuid) {
                 return crime
             }
         }

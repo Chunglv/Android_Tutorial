@@ -6,6 +6,7 @@ class Crime {
     var date: Date? = null
     var title: String = ""
     var solved: Boolean = false
+    var requiresPolice: Boolean = false
     init {
         date = Date()
     }
