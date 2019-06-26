@@ -19,7 +19,10 @@ class CrimeListFragment: Fragment() {
             itemView.setOnClickListener(this)
         }
         override fun onClick(p0: View?) {
-            Toast.makeText(itemView.context, crime?.title + " Clicked!!", Toast.LENGTH_SHORT).show()
+            crime?.run {
+                val intent = CrimeActivity.newIntent(itemView.context, id)
+                itemView.context.startActivity(intent)
+            }
         }
 
         fun bind(crime: Crime) {
