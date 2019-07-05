@@ -7,14 +7,15 @@ import java.util.*
 
 class CrimeActivity : SingleFragmentActivity() {
     override fun createFragment(): Fragment {
-        return CrimeFragment()
+        val crimeId = intent.getSerializableExtra(EXTRA_CRIME_ID) as UUID
+        return CrimeFragment.newInstance(crimeId)
     }
 
     companion object {
-        const val uuidKey = "uuid_key"
+        const val EXTRA_CRIME_ID = "crime_id"
         fun newIntent(context: Context, uuid: UUID): Intent {
             val intent = Intent(context, CrimeActivity::class.java)
-            intent.putExtra(uuidKey, uuid)
+            intent.putExtra(EXTRA_CRIME_ID, uuid)
             return intent
         }
     }

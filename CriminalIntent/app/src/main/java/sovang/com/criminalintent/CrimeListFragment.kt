@@ -8,10 +8,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import kotlinx.android.synthetic.main.fragment_crime_list.*
 import kotlinx.android.synthetic.main.fragment_crime_list.view.*
 import kotlinx.android.synthetic.main.item_crime_list.view.*
 
 class CrimeListFragment: Fragment() {
+    var adapterList : RecyclerView.Adapter<RecyclerView.ViewHolder>? = null
 
     private class CrimeViewHolder(view: View): RecyclerView.ViewHolder(view), View.OnClickListener {
         private var crime: Crime? = null
@@ -19,7 +21,7 @@ class CrimeListFragment: Fragment() {
             itemView.setOnClickListener(this)
         }
         override fun onClick(p0: View?) {
-            crime?.run {
+            crime?.apply {
                 val intent = CrimeActivity.newIntent(itemView.context, id)
                 itemView.context.startActivity(intent)
             }
@@ -38,7 +40,10 @@ class CrimeListFragment: Fragment() {
             itemView.setOnClickListener(this)
         }
         override fun onClick(p0: View?) {
-            Toast.makeText(itemView.context, crime?.title + " Danger Clicked!!", Toast.LENGTH_SHORT).show()
+            crime?.apply {
+                val intent = CrimeActivity.newIntent(itemView.context, id)
+                itemView.context.startActivity(intent)
+            }
         }
 
         fun bind(crime: Crime) {
@@ -99,5 +104,15 @@ class CrimeListFragment: Fragment() {
         return view
     }
 
+    override fun onResume() {
+        super.onResume()
+        updateUI()
+    }
 
+    private fun updateUI() {
+        val adapter = crimeRecyclerView.adapter as CrimeAdapter
+        adapter?.apply {
+            notifyDataSetChanged()
+        }
+    }
 }

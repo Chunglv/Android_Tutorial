@@ -12,13 +12,22 @@ import kotlinx.android.synthetic.main.fragment_crime.*
 import java.util.*
 
 class CrimeFragment: Fragment() {
+    companion object {
+        const val ARG_CRIME_ID = "crime_id"
+        fun newInstance(crimeId: UUID): CrimeFragment {
+            val args = Bundle()
+            args.putSerializable(ARG_CRIME_ID, crimeId)
+            val fragment = CrimeFragment()
+            fragment.arguments = args
+            return fragment
+        }
+    }
     private var crime: Crime? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        activity?.intent?.run {
-            val uuid = getSerializableExtra(CrimeActivity.uuidKey) as UUID
-            crime = CrimeLab.getInstance(activity!!.applicationContext).getCrime(uuid)
-        }
+       val crimeId =  arguments?.getSerializable(ARG_CRIME_ID) as UUID
+        crime = CrimeLab.getInstance(activity!!.applicationContext).getCrime(crimeId)
+
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
