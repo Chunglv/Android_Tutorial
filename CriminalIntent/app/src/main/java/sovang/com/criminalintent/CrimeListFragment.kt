@@ -22,7 +22,7 @@ class CrimeListFragment: Fragment() {
         }
         override fun onClick(p0: View?) {
             crime?.apply {
-                val intent = CrimeActivity.newIntent(itemView.context, id)
+                val intent = CrimePagerActivity.newIntent(itemView.context, id)
                 itemView.context.startActivity(intent)
             }
         }
@@ -41,7 +41,7 @@ class CrimeListFragment: Fragment() {
         }
         override fun onClick(p0: View?) {
             crime?.apply {
-                val intent = CrimeActivity.newIntent(itemView.context, id)
+                val intent = CrimePagerActivity.newIntent(itemView.context, id)
                 itemView.context.startActivity(intent)
             }
         }
