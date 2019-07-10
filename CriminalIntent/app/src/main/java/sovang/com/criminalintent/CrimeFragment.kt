@@ -1,5 +1,7 @@
 package sovang.com.criminalintent
 
+import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.text.Editable
@@ -14,6 +16,7 @@ import java.util.*
 class CrimeFragment: Fragment() {
     companion object {
         const val ARG_CRIME_ID = "crime_id"
+        const val requestDate = 0
         fun newInstance(crimeId: UUID): CrimeFragment {
             val args = Bundle()
             args.putSerializable(ARG_CRIME_ID, crimeId)
@@ -22,12 +25,34 @@ class CrimeFragment: Fragment() {
             return fragment
         }
     }
+    private val dialogDate = "dialogDate"
     private var crime: Crime? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
        val crimeId =  arguments?.getSerializable(ARG_CRIME_ID) as UUID
         crime = CrimeLab.getInstance(activity!!.applicationContext).getCrime(crimeId)
 
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (resultCode != Activity.RESULT_OK) {
+            return
+        }
+        when (requestCode){
+            requestDate -> {
+                data?.apply {
+                    val date = getSerializableExtra(DatePickerFragment.extraDate) as Date
+                    crime?.let {
+                        it.date = date
+                        updateDate(it)
+                    }
+                }
+            }
+        }
+    }
+
+    private fun updateDate(crime: Crime) {
+        crimeDate?.text = crime.date.toString()
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -54,16 +79,21 @@ class CrimeFragment: Fragment() {
             crimeTitle?.text = Editable.Factory.getInstance().newEditable(it.title)
             crimeSolved?.isChecked = it.solved
         }
-        crime?.let {
-            crimeDate?.text = it.date.toString()
-            Toast.makeText(context, crimeDate?.text, Toast.LENGTH_SHORT).show()
+        crime?.apply {
+            updateDate(this)
+            crimeDate?.setOnClickListener {
+                val fragmentManager = fragmentManager
+                val dialog = DatePickerFragment.newInstance(date)
+                dialog.setTargetFragment(this@CrimeFragment, requestDate)
+                dialog.show(fragmentManager, dialogDate)
+            }
         }
 
-        crimeSolved?.setOnCheckedChangeListener({
+        crimeSolved?.setOnCheckedChangeListener {
             _, b ->
             crime?.let {
                 it.solved = b
             }
-        })
+        }
     }
 }

@@ -18,7 +18,7 @@ class CrimePagerActivity : AppCompatActivity() {
         setContentView(R.layout.activity_crime_pager)
         crimes = CrimeLab.getInstance(applicationContext).getCrimes()
         val crimeId = intent.getSerializableExtra(EXTRA_CRIME_ID) as UUID
-        crime_view_pager?.setAdapter(object: FragmentStatePagerAdapter(supportFragmentManager) {
+        crime_view_pager?.adapter = object: FragmentStatePagerAdapter(supportFragmentManager) {
             override fun getCount(): Int {
                 return crimes.size
             }
@@ -27,11 +27,11 @@ class CrimePagerActivity : AppCompatActivity() {
                 val crime = crimes.get(p0)
                 return CrimeFragment.newInstance(crime.id)
             }
-        })
+        }
         for (i in 0 until crimes.size) {
             val crime = crimes.get(i)
             if (crime.id == crimeId) {
-                crime_view_pager?.setCurrentItem(i)
+                crime_view_pager?.currentItem = i
                 break
             }
         }
