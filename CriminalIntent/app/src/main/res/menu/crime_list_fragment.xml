@@ -6,4 +6,8 @@
         android:icon="@drawable/ic_add_action"
         android:title="@string/newCrime"
         app:showAsAction="ifRoom|withText"/>
+    <item
+        android:id="@+id/title"
+        android:title="@string/showSubtitle"
+        app:showAsAction="ifRoom"/>
 </menu>

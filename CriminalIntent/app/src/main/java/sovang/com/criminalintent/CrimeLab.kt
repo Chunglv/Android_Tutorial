@@ -32,14 +32,10 @@ class CrimeLab private constructor(context: Context) {
     private var crimeList: MutableList<Crime> = arrayListOf()
 
     init {
-        for (i in 0..99) {
-            val crime = Crime()
-            crime.title = "Crime #$i"
-            val correct = i%2 == 0
-            crime.solved = correct
-            crime.requiresPolice = correct
-            crimeList.add(crime)
-        }
+    }
+
+    fun addCrime(crime: Crime) {
+        crimeList.add(crime)
     }
     fun getCrimes(): List<Crime> {
         return crimeList
