@@ -11,7 +11,6 @@ import kotlinx.android.synthetic.main.fragment_crime_list.view.*
 import kotlinx.android.synthetic.main.item_crime_list.view.*
 
 class CrimeListFragment: Fragment() {
-    var adapterList : RecyclerView.Adapter<RecyclerView.ViewHolder>? = null
 
     private var isShowTitle = false
 
@@ -55,7 +54,7 @@ class CrimeListFragment: Fragment() {
         }
     }
 
-    private class CrimeAdapter(val crimeList: List<Crime>): RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+    private class CrimeAdapter(var crimeList: List<Crime>): RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
         val normalCrimeType = 0
         val dangerCrimeType = 1
@@ -93,6 +92,10 @@ class CrimeListFragment: Fragment() {
             else if (p0 is CrimeViewHolder) {
                 p0.bind(crime)
             }
+        }
+
+        fun setCrimes(crimes: List<Crime>) {
+            this.crimeList = crimes
         }
 
     }
@@ -172,7 +175,9 @@ class CrimeListFragment: Fragment() {
 
     private fun updateUI() {
         val adapter = crimeRecyclerView.adapter as CrimeAdapter
+        val crimes = CrimeLab.getInstance(context!!.applicationContext).getCrimes()
         adapter?.apply {
+            setCrimes(crimes)
             notifyDataSetChanged()
         }
         updateSubtitle()

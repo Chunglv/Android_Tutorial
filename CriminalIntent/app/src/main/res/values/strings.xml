@@ -9,5 +9,6 @@
     <string name="showSubtitle">Show Subtitle</string>
     <string name="hideSubtitle">Hide Subtitle</string>
     <string name="subtitleFormat">%1$d crimes</string>
+    <string name="deleteCrime">Delete Crime</string>
 
 </resources>

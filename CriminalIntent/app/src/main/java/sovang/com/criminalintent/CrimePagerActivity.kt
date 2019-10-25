@@ -24,7 +24,7 @@ class CrimePagerActivity : AppCompatActivity() {
             }
 
             override fun getItem(p0: Int): Fragment {
-                val crime = crimes.get(p0)
+                val crime = crimes[p0]
                 return CrimeFragment.newInstance(crime.id)
             }
         }
