@@ -1,16 +1,17 @@
 package sovang.com.criminalintent
 
-public class CrimeDatabaseScheme() {
-    final class CrimeTable () {
+ class CrimeDatabaseScheme() {
+     class CrimeTable {
         companion object {
-            val name = "crime"
+            const val name = "crime"
         }
-        final class cols() {
+        class Cols {
             companion object {
-                val uuid = "uuid"
-                val title = "title"
-                val date = "date"
-                val solved = "solved"
+                const val uuid = "uuid"
+                const val title = "title"
+                const val date = "date"
+                const val solved = "solved"
+                const val suspect = "suspect"
             }
         }
     }

@@ -10,10 +10,11 @@ class CrimeBaseHelper(var context: Context, val dbName: String = "crimeBase.db",
         db?.let{
             it.execSQL("create table " + CrimeTable.name + "("
             + " _id integer primary key autoincrement, "
-            + CrimeTable.cols.uuid + ", "
-            + CrimeTable.cols.title + ", "
-            + CrimeTable.cols.date + ", "
-            + CrimeTable.cols.solved + ")"
+            + CrimeTable.Cols.uuid + ", "
+            + CrimeTable.Cols.title + ", "
+            + CrimeTable.Cols.date + ", "
+            + CrimeTable.Cols.solved + ", "
+            + CrimeTable.Cols.suspect + ")"
             )
         }
     }

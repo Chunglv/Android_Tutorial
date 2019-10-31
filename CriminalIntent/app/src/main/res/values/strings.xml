@@ -10,5 +10,14 @@
     <string name="hideSubtitle">Hide Subtitle</string>
     <string name="subtitleFormat">%1$d crimes</string>
     <string name="deleteCrime">Delete Crime</string>
+    <string name="crimeSuspectText">Choose Suspect</string>
+    <string name="crimeReportText">Send Crime Report</string>
+    <string name="crimeReport">%1$s! The Crime was discovered on %2$s. %3$s, and %4$s</string>
+    <string name="crimeReportSolved">The case is Solved</string>
+    <string name="crimeReportUnsolved">The case is not Solved</string>
+    <string name="crimeReportNoSuspect">There is no suspect</string>
+    <string name="crimeReportSuspect">The Suspect is %s.</string>
+    <string name="crimeReportSubject">CriminalIntent Crime Report</string>
+    <string name="sendReport">Send Crime Report via</string>
 
 </resources>

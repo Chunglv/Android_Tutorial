@@ -2,7 +2,9 @@ package sovang.com.criminalintent
 
 import android.app.Activity
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.Bundle
+import android.provider.ContactsContract
 import android.support.v4.app.ActivityCompat
 import android.support.v4.app.Fragment
 import android.text.Editable
@@ -10,12 +12,14 @@ import android.text.TextWatcher
 import android.view.*
 import android.widget.Toast
 import kotlinx.android.synthetic.main.fragment_crime.*
+import android.text.format.DateFormat
 import java.util.*
 
 class CrimeFragment: Fragment() {
     companion object {
         const val ARG_CRIME_ID = "crime_id"
         const val requestDate = 0
+        const val requestContact = 1
         fun newInstance(crimeId: UUID): CrimeFragment {
             val args = Bundle()
             args.putSerializable(ARG_CRIME_ID, crimeId)
@@ -64,6 +68,27 @@ class CrimeFragment: Fragment() {
                     }
                 }
             }
+            requestContact -> {
+                data?.apply {
+                    val contactURI = getData()
+                    val queryFields = arrayOf(ContactsContract.Contacts.DISPLAY_NAME)
+
+                    val c = activity!!.contentResolver.query(contactURI, queryFields, null, null, null)
+                    c.use { cursor ->
+                        if (cursor.count == 0) {
+                            return
+                        }
+                        cursor.moveToFirst()
+                        val suspect = cursor.getString(0)
+                        crime?.apply {
+                            this.suspect = suspect
+                        }
+                        crimeSuspect?.apply {
+                            text = suspect
+                        }
+                    }
+                }
+            }
         }
     }
 
@@ -76,6 +101,28 @@ class CrimeFragment: Fragment() {
 
     private fun updateDate(crime: Crime) {
         crimeDate?.text = crime.date.toString()
+    }
+
+    private fun getCrimeReport(): String {
+        var solvedString: String
+        crime?.apply {
+            solvedString = if (solved) {
+                getString(R.string.crimeReportSolved)
+            } else {
+                getString(R.string.crimeReportUnsolved)
+            }
+            val stringFormat = "EEE, MMM dd"
+            val dateString = DateFormat.format(stringFormat, date)
+
+            var suspect = suspect
+            suspect = if (suspect == null) {
+                getString(R.string.crimeReportNoSuspect)
+            } else {
+                getString(R.string.crimeReportSuspect, suspect)
+            }
+             return getString(R.string.crimeReport, title, dateString, solvedString, suspect)
+        }
+        return ""
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -118,5 +165,30 @@ class CrimeFragment: Fragment() {
                 it.solved = b
             }
         }
+
+        crimeReport?.setOnClickListener {
+            var intent = Intent(Intent.ACTION_SEND)
+            intent.type = "text/plain"
+            intent.putExtra(Intent.EXTRA_TEXT, getCrimeReport())
+            intent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.crimeReportSubject))
+            intent = Intent.createChooser(intent, getString(R.string.sendReport))
+            startActivity(intent)
+        }
+        val pickContact = Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI)
+        crimeSuspect?.setOnClickListener {
+            startActivityForResult(pickContact, requestContact)
+        }
+        crime?.apply {
+            if (!suspect.isNullOrEmpty()) {
+                crimeSuspect?.text = suspect
+            }
+        }
+
+        val packageManager = activity!!.packageManager
+
+        if (packageManager.resolveActivity(pickContact,PackageManager.MATCH_DEFAULT_ONLY) == null) {
+            crimeSuspect?.isEnabled = false
+        }
+
     }
 }

@@ -5,7 +5,6 @@ import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import sovang.com.criminalintent.CrimeDatabaseScheme.*
 import java.util.*
-import kotlin.collections.ArrayList
 
 open class SingletonHolder<out T: Any, in A>(creator: (A) -> T) {
     private var creator: ((A) -> T)? = creator
@@ -37,10 +36,11 @@ class CrimeLab private constructor(context: Context) {
 
     private fun getContentValues(crime: Crime): ContentValues {
         val values = ContentValues()
-        values.put(CrimeTable.cols.uuid, crime.id.toString())
-        values.put(CrimeTable.cols.title, crime.title)
-        values.put(CrimeTable.cols.date, crime.date?.time)
-        values.put(CrimeTable.cols.solved, crime.solved)
+        values.put(CrimeTable.Cols.uuid, crime.id.toString())
+        values.put(CrimeTable.Cols.title, crime.title)
+        values.put(CrimeTable.Cols.date, crime.date?.time)
+        values.put(CrimeTable.Cols.solved, crime.solved)
+        values.put(CrimeTable.Cols.suspect, crime.suspect)
         return values
     }
 
@@ -63,7 +63,7 @@ class CrimeLab private constructor(context: Context) {
     }
 
     fun getCrime(uuid: UUID): Crime? {
-        val cursor = queryCrime(CrimeTable.cols.uuid + "= ?", arrayOf(uuid.toString()))
+        val cursor = queryCrime(CrimeTable.Cols.uuid + "= ?", arrayOf(uuid.toString()))
         if (cursor.count == 0) {
             return null
         }
@@ -75,7 +75,7 @@ class CrimeLab private constructor(context: Context) {
     fun updateCrime(crime: Crime) {
         val crimeId = crime.id
         val values = getContentValues(crime)
-        database.update(CrimeTable.name, values, CrimeTable.cols.uuid + "= ?",
+        database.update(CrimeTable.name, values, CrimeTable.Cols.uuid + "= ?",
                 arrayOf(crimeId.toString()))
     }
 
@@ -87,11 +87,11 @@ class CrimeLab private constructor(context: Context) {
 
     fun deleteCrime(crime: Crime) {
         val uuid = crime.id
-        database.delete(CrimeTable.name, CrimeTable.cols.uuid + "= ?", arrayOf(uuid.toString()))
+        database.delete(CrimeTable.name, CrimeTable.Cols.uuid + "= ?", arrayOf(uuid.toString()))
     }
 
     fun delete(uuid: String) {
-        database.delete(CrimeTable.name, CrimeTable.cols.uuid + "= ?", arrayOf(uuid))
+        database.delete(CrimeTable.name, CrimeTable.Cols.uuid + "= ?", arrayOf(uuid))
     }
     companion object: SingletonHolder<CrimeLab, Context>(::CrimeLab)
 }
